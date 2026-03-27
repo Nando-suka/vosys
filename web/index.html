@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voting System Demo</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; padding: 0 12px; }
+      h1, h2 { margin-bottom: 8px; }
+      section { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 14px; }
+      input, button { padding: 8px; margin: 4px 0; }
+      input { width: 100%; box-sizing: border-box; }
+      button { cursor: pointer; }
+      pre { background: #111; color: #f3f3f3; padding: 12px; border-radius: 6px; white-space: pre-wrap; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .muted { color: #666; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <h1>Voting System (Golang + Gin + MySQL)</h1>
+    <p class="muted">Simple demo page for learning and manual testing.</p>
+
+    <section>
+      <h2>Create Candidate</h2>
+      <div class="row">
+        <input id="candidateName" placeholder="Candidate name" />
+        <input id="candidateCountry" placeholder="Country" />
+      </div>
+      <button onclick="createCandidate()">Create Candidate</button>
+    </section>
+
+    <section>
+      <h2>Create Voter</h2>
+      <div class="row">
+        <input id="voterName" placeholder="Voter name" />
+        <input id="voterEmail" placeholder="Voter email" />
+      </div>
+      <button onclick="createVoter()">Create Voter</button>
+    </section>
+
+    <section>
+      <h2>Vote</h2>
+      <div class="row">
+        <input id="voteVoterId" type="number" placeholder="Voter ID" />
+        <input id="voteCandidateId" type="number" placeholder="Candidate ID" />
+      </div>
+      <button onclick="vote()">Submit Vote</button>
+    </section>
+
+    <section>
+      <h2>View Data</h2>
+      <button onclick="loadCandidates()">Load Candidates</button>
+      <button onclick="loadRanking()">Load Ranking</button>
+      <button onclick="loadVoters()">Load Voters</button>
+    </section>
+
+    <section>
+      <h2>Response</h2>
+      <pre id="output">Ready.</pre>
+    </section>
+
+    <script>
+      const output = document.getElementById("output");
+
+      function print(data) {
+        output.textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+      }
+
+      async function request(path, method, body) {
+        const res = await fetch(path, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        const text = await res.text();
+        let data = text;
+        try { data = JSON.parse(text); } catch (_) {}
+        print({ status: res.status, data });
+      }
+
+      function createCandidate() {
+        request("/candidates", "POST", {
+          name: document.getElementById("candidateName").value,
+          country: document.getElementById("candidateCountry").value,
+        });
+      }
+
+      function createVoter() {
+        request("/voters", "POST", {
+          name: document.getElementById("voterName").value,
+          email: document.getElementById("voterEmail").value,
+        });
+      }
+
+      function vote() {
+        request("/vote", "POST", {
+          voter_id: Number(document.getElementById("voteVoterId").value),
+          candidate_id: Number(document.getElementById("voteCandidateId").value),
+        });
+      }
+
+      function loadCandidates() { request("/candidates", "GET"); }
+      function loadRanking() { request("/candidates/ranking", "GET"); }
+      function loadVoters() { request("/voters", "GET"); }
+    </script>
+  </body>
+</html>
