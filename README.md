@@ -135,3 +135,4 @@ If this folder is already inside another git repository, create a new GitHub rep
 ---
 
 Made for learning backend fundamentals in Golang.
+TBH I'm still vibecoding all of these code. However, I will plan to learn little by little to improve my golang skills and I'm so happy if anyone could give me any feedback, harsh or kind accepted :)
