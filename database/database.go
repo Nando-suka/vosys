@@ -9,21 +9,21 @@ import (
 	"gorm.io/gorm"
 )
 
-// Inisialisasi database
 func ConnectDatabase() *gorm.DB {
-	dsn := os.Getenv("root@tcp(127.0.0.1:3306)/my_app")
+	// Baca DSN dari environment variable DB_DSN
+	dsn := os.Getenv("DB_DSN")
 	if dsn == "" {
 		log.Fatal("DB_DSN tidak boleh kosong")
 	}
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Gagal menghubungkan ke database", err)
+		log.Fatal("Gagal menghubungkan ke database: ", err)
 	}
 
-	// Melakukan migrasi model ke database
+	// Migrasi model
 	if err := db.AutoMigrate(&models.Candidate{}, &models.Voter{}); err != nil {
-		log.Fatal("Gagal migrasi tabel", err)
+		log.Fatal("Gagal migrasi tabel: ", err)
 	}
 
 	return db

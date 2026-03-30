@@ -65,7 +65,7 @@ func (h *Handler) Vote(c *gin.Context) {
 		}
 
 		if voter.Voted {
-			return errors.New("already_voted")
+			return errors.New("Telah dipilih")
 		}
 
 		var candidate models.Candidate

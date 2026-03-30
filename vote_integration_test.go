@@ -18,7 +18,7 @@ import (
 func setupTestRouter(t *testing.T) (*gorm.DB, *gin.Engine) {
 	t.Helper()
 
-	dsn := os.Getenv("root@tcp(127.0.0.1:3306)/my_app")
+	dsn := os.Getenv("root:@tcp(127.0.0.1:3306)/dbvoting")
 	if dsn == "" {
 		t.Skip("TEST_DB_DSN belum di-set, test integrasi MySQL dilewati")
 	}
